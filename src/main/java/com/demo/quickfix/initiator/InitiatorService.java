@@ -12,39 +12,44 @@ public class InitiatorService extends MessageCracker implements Application {
 
     @Override
     public void onCreate(SessionID sessionID) {
+        // Executed when QuickFIX/J creates a new session
         log.info("Session created {}", sessionID);
     }
 
     @Override
     public void onLogon(SessionID sessionID) {
+        // Func gets executed when counterparty successfully login
         log.info("Logon successful {}", sessionID);
     }
 
     @Override
     public void onLogout(SessionID sessionID) {
+        // Notifies when a FIX session goes offline
         log.info("Logout successful {}", sessionID);
     }
 
     @Override
     public void toAdmin(Message message, SessionID sessionID) {
-        // Objective: Handles administrative messages sent to the counterparty
+        // Handles admin messages sent to counterparty
         log.info("To admin {}", sessionID);
     }
 
     @Override
     public void fromAdmin(Message message, SessionID sessionID) throws FieldNotFound, IncorrectDataFormat, IncorrectTagValue, RejectLogon {
+        // Handles admin message sent from counterparty
         log.info("From admin {}", sessionID);
     }
 
     @Override
     public void toApp(Message message, SessionID sessionID) throws DoNotSend {
-        // Objective: Callback for application-level messages sent to the counterparty
+        // Callback func that executes right before sending an app-level message to counterparty
+        // IMPORTANT: App-level and admin-level messages are different
         log.info("Sending Message {}", message);
     }
 
     @Override
     public void fromApp(Message message, SessionID sessionID) throws FieldNotFound, IncorrectDataFormat, IncorrectTagValue, UnsupportedMessageType {
-        // Core entry point for application-level messages. Every request from the counterparty will be received here
+        // Accepts app-level messages from counterparty
         crack(message, sessionID);
     }
 
