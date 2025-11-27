@@ -3,6 +3,7 @@ package com.demo.quickfix.initiator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import quickfix.*;
+import quickfix.fix42.ExecutionReport;
 import quickfix.fix42.MessageCracker;
 
 @Slf4j
@@ -45,5 +46,10 @@ public class InitiatorService extends MessageCracker implements Application {
     public void fromApp(Message message, SessionID sessionID) throws FieldNotFound, IncorrectDataFormat, IncorrectTagValue, UnsupportedMessageType {
         // Core entry point for application-level messages. Every request from the counterparty will be received here
         crack(message, sessionID);
+    }
+
+    @quickfix.MessageCracker.Handler
+    public void onMessage(ExecutionReport executionReport, SessionID sessionID) {
+        log.info("Received ExecutionReport {}", executionReport);
     }
 }
